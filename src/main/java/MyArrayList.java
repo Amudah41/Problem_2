@@ -11,6 +11,7 @@ public class MyArrayList<E> implements List<E> {
     private int capacity;
     private final int CAPACITY_INCREASE = 2;
     private final int START_CAPACITY = 8;
+    private final int MAX_CAPACITY = Integer.MAX_VALUE;
 
     public MyArrayList() {
         this.array = new Object[START_CAPACITY];
@@ -22,12 +23,12 @@ public class MyArrayList<E> implements List<E> {
         if (capacity > 0) {
             this.array = new Object[capacity];
             this.capacity = capacity;
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Массив пуст");
         }
     }
 
+    @Override
     public boolean add(E data) {
         if (this.size == this.capacity) {
             increaseCapacity();
@@ -38,7 +39,15 @@ public class MyArrayList<E> implements List<E> {
     }
 
     private void increaseCapacity() {
-        int newCapacity = this.capacity + CAPACITY_INCREASE;
+        if (this.capacity == MAX_CAPACITY) {
+            throw new IndexOutOfBoundsException("Превышение вместимости массива");
+        }
+        int newCapacity;
+        if (this.capacity <= MAX_CAPACITY / CAPACITY_INCREASE) {
+            newCapacity = this.capacity * CAPACITY_INCREASE;
+        } else {
+            newCapacity = MAX_CAPACITY;
+        }
         Object[] tmp = new Object[newCapacity];
         System.arraycopy(this.array, 0, tmp, 0, this.capacity);
         this.array = tmp;
@@ -60,6 +69,7 @@ public class MyArrayList<E> implements List<E> {
         this.size++;
     }
 
+
     public E remove(int index) {
         Object tmp = this.array[index];
         if (this.size == 0) {
@@ -70,8 +80,7 @@ public class MyArrayList<E> implements List<E> {
         }
         if (this.size - index > 0) {
             System.arraycopy(this.array, index + 1, this.array, index, this.size - index);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Выход за границу массива");
         }
         this.array[--size] = null;
@@ -79,7 +88,8 @@ public class MyArrayList<E> implements List<E> {
 
     }
 
-    public boolean isContains(Object data) {
+    @Override
+    public boolean contains(Object data) {
         for (int i = 0; i <= this.size; i++) {
             if (data.equals(this.array[i])) {
                 return true;
@@ -88,36 +98,21 @@ public class MyArrayList<E> implements List<E> {
         return false;
     }
 
-
+    @Override
     public boolean isEmpty() {
         return this.size == 0;
     }
 
-    public void printArray() {
-        for (int i = 0; i < this.size; i++) {
-            System.out.print(this.array[i]+" ");
-        }
-        System.out.println();
-    }
-
     @Override
-    public boolean contains(Object o) {
-        throw new UnsupportedOperationException("Эта операция не поддерживается");
-    }
-
     public int size() {
         return this.size;
     }
 
+    @Override
     public E get(int index) {
         return (E) this.array[index];
     }
 
-    public void printArrayList() {
-        for (int i = 0; i < this.size; i++) {
-            System.out.println(this.array[i]);
-        }
-    }
 
     @Override
     public Iterator<E> iterator() {
@@ -206,7 +201,12 @@ public class MyArrayList<E> implements List<E> {
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("Эта операция не поддерживается");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < size(); i++) {
+            sb.append(this.array[i]);
+            sb.append(" ");
+        }
+        return sb.toString();
     }
 
     @Override

@@ -14,27 +14,26 @@ class MyStack<E> extends MyArrayList<E> {
     }
 
     public E pop() {
-        if (! this.array.isEmpty()) {
+        if (!this.array.isEmpty()) {
             int index = top - 1;
             top--;
             return this.array.remove(index);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Стек пуст");
         }
     }
 
     public E peek() {
-        if (! this.array.isEmpty()) {
+        if (!this.array.isEmpty()) {
             return this.array.get(top - 1);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Стек пуст");
         }
     }
+
     public void printStack() {
         for (int i = 0; i < this.top; i++) {
-            System.out.print(this.array.get(i) +" ");
+            System.out.print(this.array.get(i) + " ");
         }
         System.out.println();
     }
